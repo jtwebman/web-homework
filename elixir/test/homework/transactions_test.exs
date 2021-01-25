@@ -36,7 +36,7 @@ defmodule Homework.TransactionsTest do
       valid_attrs = %{
         amount: 42,
         credit: true,
-        debit: true,
+        debit: false,
         description: "some description",
         merchant_id: merchant1.id,
         user_id: user1.id
@@ -45,7 +45,7 @@ defmodule Homework.TransactionsTest do
       update_attrs = %{
         amount: 43,
         credit: false,
-        debit: false,
+        debit: true,
         description: "some updated description",
         merchant_id: merchant2.id,
         user_id: user2.id
@@ -60,11 +60,21 @@ defmodule Homework.TransactionsTest do
         user_id: nil
       }
 
+      credit_debit_attrs = %{
+        amount: 10,
+        credit: true,
+        debit: true,
+        description: "credit and a debit",
+        merchant_id: merchant1.id,
+        user_id: user1.id
+      }
+
       {:ok,
        %{
          valid_attrs: valid_attrs,
          update_attrs: update_attrs,
          invalid_attrs: invalid_attrs,
+         credit_debit_attrs: credit_debit_attrs,
          merchant1: merchant1,
          merchant2: merchant2,
          user1: user1,
@@ -100,7 +110,7 @@ defmodule Homework.TransactionsTest do
       # IO.puts(transaction)
       assert transaction.amount == 42
       assert transaction.credit == true
-      assert transaction.debit == true
+      assert transaction.debit == false
       assert transaction.description == "some description"
       assert transaction.merchant_id == merchant1.id
       assert transaction.user_id == user1.id
@@ -110,6 +120,12 @@ defmodule Homework.TransactionsTest do
       invalid_attrs: invalid_attrs
     } do
       assert {:error, %Ecto.Changeset{}} = Transactions.create_transaction(invalid_attrs)
+    end
+
+    test "create_transaction/1 with credit and debit true returns error changeset", %{
+      credit_debit_attrs: credit_debit_attrs
+    } do
+      assert {:error, %Ecto.Changeset{}} = Transactions.create_transaction(credit_debit_attrs)
     end
 
     test "update_transaction/2 with valid data updates the transaction", %{
@@ -125,7 +141,7 @@ defmodule Homework.TransactionsTest do
 
       assert transaction.amount == 43
       assert transaction.credit == false
-      assert transaction.debit == false
+      assert transaction.debit == true
       assert transaction.description == "some updated description"
       assert transaction.merchant_id == merchant2.id
       assert transaction.user_id == user2.id
@@ -153,5 +169,6 @@ defmodule Homework.TransactionsTest do
       transaction = transaction_fixture(valid_attrs)
       assert %Ecto.Changeset{} = Transactions.change_transaction(transaction)
     end
+
   end
 end

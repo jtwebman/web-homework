@@ -22,5 +22,6 @@ defmodule Homework.Transactions.Transaction do
     transaction
     |> cast(attrs, [:user_id, :amount, :credit, :debit, :description, :merchant_id])
     |> validate_required([:user_id, :amount, :credit, :debit, :description, :merchant_id])
+    |> check_constraint(:transactions, name: :credit_or_debit)
   end
 end
