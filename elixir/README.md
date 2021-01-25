@@ -1,8 +1,8 @@
 # Homework
 
 You will need to have postgres running.
-The easiest way to install postgres is through brew:
-`brew install postgres`
+The easiest way to install postgres is through docker:
+`docker run -d --name dev-postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=homework_dev -p 5432:5432  postgres`
 
 To start your Phoenix server:
 
